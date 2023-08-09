@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` })
 var config = require('./dbconfig');
 const sql = require('mssql');
 
@@ -69,7 +69,6 @@ async function getAllPSNData() {
         let pool = await sql.connect(config);
         console.log("connect complete");
         const queryData = await pool.request().query(psnQryTxt);
-        await pool.close();
         let result = queryData.recordsets[0]
         if (result) {
             result = await psnSpcClr(queryData.recordsets[0]);
@@ -92,7 +91,6 @@ async function getPSNDataById(STFNO) {
         const queryData = await pool.request()
             .input("STFNO", sql.VarChar, STFNO)
             .query(psnQryTxt + "AND STFNO = @STFNO");
-        await pool.close();
         let result = queryData.recordset[0];
         if (result) {
             result = await psnSpcClr(queryData.recordset[0]);
@@ -151,7 +149,6 @@ async function getAllDept() {
         let pool = await sql.connect(config);
         console.log("connect complete");
         const queryData = await pool.request().query(deptQryTxt);
-        await pool.close();
         let result = deptSpcClr(queryData.recordsets[0]);
         console.log("getAllDept complete");
         console.log("====================");

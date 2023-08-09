@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 app.use(cors({
     origin: '*'
 }));
-app.use('/api/hims', router);
+app.use('/api/himspsn', router);
 
 router.use((request, response, next) => {
     //write authen here
@@ -22,9 +22,14 @@ router.use((request, response, next) => {
     response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     response.setHeader('Access-Control-Allow-Credentials', true);
 
-    console.log('middleware');
+    // console.log('middleware');
     next();
 });
+
+router.route("/health").get((request, response) => {
+    // console.log("health check");
+    response.json({ status: 200 });
+  });
 
 router.route('/getallpsndata').get((request, response) => {
 
