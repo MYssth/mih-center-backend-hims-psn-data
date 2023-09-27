@@ -27,6 +27,7 @@ async function psnSpcClr(rData) {
         dept_name: rData[i].dept_name?.split(" ").join(""),
         pos_id: rData[i].pos_id?.split(" ").join(""),
         pos_name: rData[i].pos_name?.split(" ").join(""),
+        quit_date: rData[i].quit_date?.split(" ").join(""),
       });
     }
   } else {
@@ -52,6 +53,7 @@ async function psnSpcClr(rData) {
       dept_name: rData.dept_name?.split(" ").join(""),
       pos_id: rData.pos_id?.split(" ").join(""),
       pos_name: rData.pos_name?.split(" ").join(""),
+      quit_date: rData.quit_date?.split(" ").join(""),
     });
   }
   return rData;
