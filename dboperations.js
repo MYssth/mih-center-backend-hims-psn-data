@@ -213,6 +213,48 @@ async function getAllDept() {
   }
 }
 
+async function getUsrReqList(usrReq) {
+  try {
+    console.log(
+      "getUsrReqList from " + usrReq + ", call try connect to server"
+    );
+    let pool = await sql.connect(config);
+    console.log("connect complete");
+    let queryData = await pool
+      .request()
+      .query("SELECT * FROM VIEW_USERREQ WHERE Userreq = '" + usrReq + "'");
+    queryData = queryData.recordset[0];
+    let result = { status: "error", msg: "User request ไม่ถูกต้อง" };
+    let tmp = "";
+    if (queryData) {
+      // 1 = inactive
+      if (queryData.StatusFlag !== "1") {
+        tmp = await getPSNDataById(queryData.รหัสพนักงาน);
+        queryData = await pool
+          .request()
+          .query(
+            "SELECT * FROM VIEW_USERREQ WHERE รหัสพนักงาน = '" +
+              queryData.รหัสพนักงาน +
+              "'"
+          );
+        queryData = queryData.recordsets[0];
+        let usrReqList = [];
+        for (let i = 0; i < queryData.length; i += 1) {
+          usrReqList.push(queryData[i].Userreq.split(" ").join(""));
+        }
+        result = { name: `${tmp.pname}${tmp.fname} ${tmp.lname}`, usrReqList };
+      }
+    }
+    // console.log(queryData);
+    console.log("getUsrReqList complete");
+    console.log("====================");
+    return result;
+  } catch (error) {
+    console.error(error);
+    return { status: "error", message: error.message };
+  }
+}
+
 async function getVersion() {
   try {
     return process.env.version;
@@ -227,5 +269,6 @@ module.exports = {
   getActvPSN: getActvPSN,
   getPSNDataById: getPSNDataById,
   getAllDept: getAllDept,
+  getUsrReqList: getUsrReqList,
   getVersion: getVersion,
 };

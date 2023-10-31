@@ -81,6 +81,18 @@ router.route("/getalldept").get((request, response) => {
     });
 });
 
+router.route("/getusrreqlist/:usrreq").get((request, response) => {
+  dboperations
+    .getUsrReqList(request.params.usrreq)
+    .then((result) => {
+      response.status(201).json(result);
+    })
+    .catch((err) => {
+      console.error(err);
+      response.setStatus(500);
+    });
+});
+
 router.route("/getversion").get((request, response) => {
   dboperations
     .getVersion()
